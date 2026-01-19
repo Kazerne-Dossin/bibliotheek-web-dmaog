@@ -39,5 +39,3 @@ package-lock.json
 mvnw
 mvnw.cmd
 Ucanaccess_net*
-src/main/java/eu/kazernedossin/bibliotheekweb/dao/DataAccessSingleton.java
-src/main/resources/templates/fragments/footer.html
