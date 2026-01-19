@@ -1,0 +1,51 @@
+PREFIX : <http://example.com/>
+PREFIX schema: <http://schema.org/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX kdbib: <http://bibliotheek.kazernedossin.eu/books/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SOURCE books_db <jdbc:ucanaccess://C:\Users\Herminio\Desktop\dmaog-playground\BIBLIOTHEEK_versie2025.mdb;memory=false>
+
+ITERATOR books <sql: SELECT * FROM Boeken;> {
+    FIELD id <ID>
+    FIELD author <auteur>
+    FIELD title <Functie>
+    FIELD ISBN <ISBN>
+    FIELD bookEditorial <ed>
+    FIELD bookEditorialPlace <ed pl>
+    FIELD editionDate <ed dat>
+    FIELD language <Taal>
+    FIELD info <info>
+    FIELD cdrom <cd-rom>
+    FIELD doubleOrVersion <Dubbel/Versie>
+    FIELD numberOfPages <pag>
+    FIELD donatedBy <Geschonken door>
+    FIELD missing <Missing>
+    FIELD keywords <Onderwerp>
+    FIELD lent <Uitgeleend door>
+    FIELD lendingDate <Op>
+}
+
+MATCHER booleans <FALSE AS false & TRUE AS true>
+
+EXPRESSION book <books_db.books>
+
+schema:Book kdbib:[book.id] {
+    a dc:Text ;
+    dc:title [book.title] ;
+    dc:creator [book.author] ;
+    dc:identifier [book.ISBN] xsd:string ;
+    dc:publisher [book.bookEditorial] ;
+    schema:locationCreated [book.bookEditorialPlace] ;
+    dc:created dbr:[book.editionDate] ;
+    dc:language dbr:[book.language] ;
+    :info [book.info] ;
+    #:cdrom [book.cdrom MATCHING booleans] ;
+    #dc:hasVersion [book.doubleOrVersion] ;
+    dc:sizeOrDuration [book.numberOfPages] ;
+    :donatedBy [book.donatedBy] ;
+    #:missing [book.missing MATCHING booleans] ;
+    dc:subject [book.keywords] ;
+    #:lent [book.lent] ;
+    #:lendingDate [book.lendingDate] ;
+}
